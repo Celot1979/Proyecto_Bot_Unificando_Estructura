@@ -1,5 +1,16 @@
 package Bot_Estructurado;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.net.Socket;
+
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 public class Bot_Cliente_Servidor {
 
 	public static void main(String[] args) {
@@ -192,7 +203,6 @@ class marco extends JFrame {
   //------------------------------------------- EXISTEN 4 OPCIONES Y SE LE ENVÍA LA INFO --------------------------------------------------------------
     
     public class hilo_Envio_Info_Cliente_Servidor implements Runnable{
-    	
 		public hilo_Envio_Info_Cliente_Servidor(String iP, int puerto_Inicial) {
 			IP = iP;
 			Puerto_Inicial = puerto_Inicial;
@@ -200,7 +210,7 @@ class marco extends JFrame {
 		@Override
 		public void run() {
 			// TODO Auto-generated method stub
-			 try {
+			try {
 				Envio_Info_Cliente Enviar_Info = new  Envio_Info_Cliente(IP,Puerto_Inicial);
 			} catch (UnknownHostException e) {
 				// TODO Auto-generated catch block
@@ -225,28 +235,31 @@ class marco extends JFrame {
 					ObjectOutputStream flujosSalidaPaquete = new ObjectOutputStream(Socket_Envio_Info_Cliente.getOutputStream());
 					flujosSalidaPaquete.writeObject(datos);
 					Texto.setText("");
+					contenido.append("\n" + "\n" + "Bienvenido: "  + datos.getUsuario() + "\n" + "Has escogido la opción:"+ "\n" + "Problemas con el pedido");
 					Socket_Envio_Info_Cliente.close();
 				}else if(datos.getOpcion().equals("2")) {
 					datos.setMensaje("Opción2");
 					ObjectOutputStream flujosSalidaPaquete = new ObjectOutputStream(Socket_Envio_Info_Cliente.getOutputStream());
 					flujosSalidaPaquete.writeObject(datos);
 					Texto.setText("Opción1");
+					contenido.append("\n" + "\n" + "Bienvenido: " + datos.getUsuario() + "\n" + "Has escogido la opción:"+ "\n" + "Información de devoluciones");
 					Socket_Envio_Info_Cliente.close();
 				}else if(datos.getOpcion().equals("3")) {
 					datos.setMensaje("Opción3");
 					ObjectOutputStream flujosSalidaPaquete = new ObjectOutputStream(Socket_Envio_Info_Cliente.getOutputStream());
 					flujosSalidaPaquete.writeObject(datos);
 					Texto.setText(" ");
+					contenido.append("\n" + "\n" + "Bienvenido: " + datos.getUsuario() + "\n" + "Has escogido la opción:"+ "\n" + "Puntos de recogida");
 					Socket_Envio_Info_Cliente.close();
 				}else if (datos.getOpcion().equals("4")) {
 					datos.setMensaje(JOptionPane.showInputDialog("Explicanos tú problema"));
 					ObjectOutputStream flujosSalidaPaquete = new ObjectOutputStream(Socket_Envio_Info_Cliente.getOutputStream());
 					flujosSalidaPaquete.writeObject(datos);
 					Texto.setText(" ");
+					contenido.append("\n" + "\n"+ "Bienvenido: " + datos.getUsuario() + "\n" + datos.getMensaje());
 					Socket_Envio_Info_Cliente.close();
 				}
-				
-		  }
+				}
 		}
 		String IP = "192.168.0.7";
 		int Puerto_Inicial;
@@ -258,10 +271,7 @@ class marco extends JFrame {
     //--------------------------------------------- INFORMACIÓN  (SERVIDOR - CLIENTE ) ------------------------------------------------------------------
     //------------------------------------------- EXISTEN 4 OPCIONES Y SE LE ENVÍA LA INFO --------------------------------------------------------------
     public class hilo_Escucha_Info_Servidor_Cliente implements Runnable{
-    	
-    	
-    	
-    	public hilo_Escucha_Info_Servidor_Cliente(String iP, int puerto_Inicial) {
+		public hilo_Escucha_Info_Servidor_Cliente(String iP, int puerto_Inicial) {
 			IP = iP;
 			Puerto_Inicial = puerto_Inicial;
 		}
@@ -278,7 +288,6 @@ class marco extends JFrame {
 				e.printStackTrace();
 			}
 		}
-    	
     	class Escucha_Servidor{
     		public Escucha_Servidor(int puerto) throws IOException, ClassNotFoundException {
     			ServerSocket Servidor_Escucha = new ServerSocket(puerto);
